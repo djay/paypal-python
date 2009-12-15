@@ -6,7 +6,7 @@ from . import BaseConstants
 from . import BaseAPIProfile
 from . import PaymentException
 #from .encoder import SoapEncoder
-    
+
 class AdapativePayments(object):
 
     def __init__(self, profile=None, encoder=None):
@@ -72,7 +72,7 @@ class AdapativePayments(object):
         self.profile.EndPointAppend = self.apEndpoint + endpoint
         self.payload = self.encoder.encode(request)
         response = self._call_api()
-        
+
         if "<ACK>FAILURE</ACK>" in response.upper():
             raise PaymentException(response)
         return True
@@ -80,10 +80,10 @@ class AdapativePayments(object):
     def _call_api(self):
         assert self.payload, "Payload is required"
         assert self.profile, "API Profile is required"
-        
+
         url = self.profile.Environment + self.profile.EndPointAppend
         headers = self._headers()
-        
+
         # TODO: Add the certificate to HttpWebRequest obejct if Profile is certificate enabled
         if self.profile.APIProfileType == ProfileType.Certificate:
             raise NotImplementedError("Does not yet support certificate authentication")
@@ -91,12 +91,12 @@ class AdapativePayments(object):
             headers[BaseConstants.XPAYPALSECURITYSIGNATURE] = self.profile.APISignature
 
         request = urllib2.Request(url, self.payload, headers)
-        
+
         timeout = self.profile.Timeout
         if timeout < 1:
             timeout = BaseConstants.DEFAULT_TIMEOUT;
         socket.setdefaulttimeout(timeout)
-        
+
         response = Response(urllib2.urlopen(request).read())
         return response
 
