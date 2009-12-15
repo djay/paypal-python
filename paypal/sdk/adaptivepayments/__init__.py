@@ -1,7 +1,12 @@
+"""
+This is my first pass at attempting at implementing a client
+in python for the PayPal adaptive payments API.
+"""
+
+__id__ = "$Id: $"
 
 
-class PaymentException(Exception):
-    """ raised when error processing payment """
+from ..exceptions import ApiError as PaymentException
 
 
 class BaseConstants(object):
@@ -35,6 +40,7 @@ class BaseConstants(object):
         PAYPALLOGFILE = "PAYPALLOGFILE"
 
         DEFAULT_TIMEOUT = 3600000
+
 
 class BaseAPIProfile(object):
 
@@ -90,4 +96,3 @@ class BaseAPIProfile(object):
 
         # Endpoint to Append to URL
         EndPointAppend = ""
-
