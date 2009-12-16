@@ -6,6 +6,7 @@ from . import BaseConstants
 from . import BaseAPIProfile
 from . import PaymentException
 #from .encoder import SoapEncoder
+from ..response import Response
 
 class AdapativePayments(object):
 
@@ -18,6 +19,8 @@ class AdapativePayments(object):
         self.request_method = BaseConstants.REQUESTMETHOD
         self.encoder = encoder
 
+        self.ap_endpoint = "" #??? TODO: figure out what this is
+
     #
     # API Actions
     #
@@ -26,50 +29,50 @@ class AdapativePayments(object):
         """ @param PayRequest
             @return PayResponse
         """
-        return self.process_request(request, "Pay")
+        return self._process_request(request, "Pay")
 
-    def preapproval_details(request):
+    def preapproval_details(self, request):
         """ @param PreapprovalDetailsRequest
             @return PreapprovalDetailsResponse
         """
-        return self.process_request(request, "PreapprovalDetails")
+        return self._process_request(request, "PreapprovalDetails")
 
-    def refund(request):
+    def refund(self, request):
         """ @param RefundRequest
             @param RefundResponse
         """
-        return self.process_request(request, "Refund")
+        return self._process_request(request, "Refund")
 
-    def payment_details(request):
+    def payment_details(self, request):
         """ @param PaymentDetailsRequest
             @param PaymentDetailsResponse
         """
-        return self.process_request(request, "PaymentDetails")
+        return self._process_request(request, "PaymentDetails")
 
-    def preapproval(request):
+    def preapproval(self, request):
         """ @param PreapprovalRequest
             @param PreapprovalResponse
         """
-        return self.process_request(request, "Preapproval")
+        return self._process_request(request, "Preapproval")
 
-    def cancel_preapproval(request):
+    def cancel_preapproval(self, request):
         """ @param CancelPreapprovalRequest
             @param CancelPreapprovalResponse
         """
-        return self.process_request(request, "CancelPreapproval")
+        return self._process_request(request, "CancelPreapproval")
 
-    def convert_currency(request):
+    def convert_currency(self, request):
         """ @param ConvertCurrencyRequest
             @param ConvertCurrencyResponse
         """
-        return self.process_request(request, "ConvertCurrency")
+        return self._process_request(request, "ConvertCurrency")
 
     #
     # Shared Private Methods
     #
 
     def _process_request(self, request, endpoint):
-        self.profile.EndPointAppend = self.apEndpoint + endpoint
+        self.profile.EndPointAppend = self.ap_endpoint + endpoint
         self.payload = self.encoder.encode(request)
         response = self._call_api()
 
@@ -85,10 +88,11 @@ class AdapativePayments(object):
         headers = self._headers()
 
         # TODO: Add the certificate to HttpWebRequest obejct if Profile is certificate enabled
-        if self.profile.APIProfileType == ProfileType.Certificate:
-            raise NotImplementedError("Does not yet support certificate authentication")
-        else:
-            headers[BaseConstants.XPAYPALSECURITYSIGNATURE] = self.profile.APISignature
+        #if self.profile.APIProfileType == ProfileType.Certificate:
+        #    raise NotImplementedError("Does not yet support certificate authentication")
+        #else:
+        #    headers[BaseConstants.XPAYPALSECURITYSIGNATURE] = self.profile.APISignature
+        headers[BaseConstants.XPAYPALSECURITYSIGNATURE] = self.profile.APISignature
 
         request = urllib2.Request(url, self.payload, headers)
 
