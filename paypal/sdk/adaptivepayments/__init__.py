@@ -33,8 +33,8 @@ class BaseConstants(object):
         XPAYPALSANDBOXEMAILADDRESS = "X-PAYPAL-SANDBOX-EMAIL-ADDRESS"
 
         # Data Request format specified here
-        RequestDataformat="SOAP11"
-        ResponseDataformat="SOAP11"
+        RequestDataformat="NV"
+        ResponseDataformat="NV"
 
         REQUESTMETHOD = "POST"
         PAYPALLOGFILE = "PAYPALLOGFILE"
